@@ -141,8 +141,8 @@ loop {
     play json("http://api.8tracks.com/sets/#{set['play_token']}/play.json?mix_id=#{mix['id']}")['set']['track']
     loop {
       got = json("http://api.8tracks.com/sets/#{set['play_token']}/next.json?mix_id=#{mix['id']}")
-      break if got['track']['trackId'] == 0
-      play(got['track']) or exit
+      break if got['set']['track']['id'] == 0
+      play(got['set']['track']) or exit
     }
     if index == mixes['total_entries']
       $opts[:page] = 0
