@@ -107,11 +107,11 @@ def prepare_file(url, as = nil)
 end
 
 def play(track)
-  $logger.info "track: #{track['title']}"
-  $logger.info "album: #{track['album']}"
-  $logger.info "contributor: #{track['contributor']}"
-  $logger.info "url: #{track['referenceUrl']}"
-  path = prepare_file(track['item'], [track['contributor'], track['title']].map{ |s| s.gsub(/\//, '_')}.join(' - '))
+  $logger.info "track: #{track['name']}"
+  $logger.info "release name: #{track['release_name']}"
+  $logger.info "performer: #{track['performer']}"
+  $logger.info "url: #{track['url']}"
+  path = prepare_file(track['url'], [track['performer'], track['name']].map{ |s| s.gsub(/\//, '_')}.join(' - '))
   return if $opts[:no_play]
   cmd = "mplayer #{path}"
   cmd += " >& /dev/null" unless $opts[:verbose]
@@ -138,7 +138,7 @@ loop {
     $logger.info "user: #{mix['user']['slug']}"
     $logger.info "description: #{mix['description']}"
     $logger.info "url: #{mix['restful_url']}"
-    play json("http://api.8tracks.com/sets/#{set['play_token']}/play.json?mix_id=#{mix['id']}")['track']
+    play json("http://api.8tracks.com/sets/#{set['play_token']}/play.json?mix_id=#{mix['id']}")['set']['track']
     loop {
       got = json("http://api.8tracks.com/sets/#{set['play_token']}/next.json?mix_id=#{mix['id']}")
       break if got['track']['trackId'] == 0
